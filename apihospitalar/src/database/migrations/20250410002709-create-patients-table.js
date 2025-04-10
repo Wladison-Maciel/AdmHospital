@@ -49,7 +49,11 @@ module.exports = {
         type: Sequelize.ENUM("LEVE", "ALERTA", "GRAVE"),
         allowNull: false,
       },
-
+      // Campo "has_companion" - Define se o paciente tem um acompanhante
+      has_companion: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
+      },
       // Campo "created_at" - armazena a data/hora da criação do registro
       created_at: {
         type: Sequelize.DATE,

@@ -10,6 +10,7 @@ class Patient extends Model {
             phone: Sequelize.STRING,
             diagnosis: Sequelize.STRING,
             status: Sequelize.ENUM("LEVE", "ALERTA", "GRAVE"),
+            has_companion: Sequelize.BOOLEAN,
         }, 
         {
             sequelize,

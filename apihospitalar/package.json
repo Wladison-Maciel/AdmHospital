@@ -16,5 +16,8 @@
   },
   "scripts": {
     "dev": "nodemon ./src/server.js"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.2"
   }
 }

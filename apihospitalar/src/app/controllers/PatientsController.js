@@ -12,7 +12,7 @@ class PatientesController {
 
             // Verificando se o ID passado é válido
             if (isNaN(id)) {
-                return res.status(400).json({ error: "ID inválido" });
+                return res.status(400).json({ error: "ID invalid" });
             }
 
             // Relizando busca do Patient
@@ -24,7 +24,7 @@ class PatientesController {
 
             // Se não houver o Patient buscado
             if (!patient) {
-                return res.status(404).json({ error: "Paciente não encontrado" });
+                return res.status(404).json({ error: "Pacient not found" });
             }
 
             // Resposta em caso de sucesso seguindo padrões REST
@@ -34,8 +34,8 @@ class PatientesController {
             });
         } catch (error) {
             // Capturando um possível erro na busca
-            console.error("Erro ao buscar paciente:", error.message);
-            return res.status(500).json({ error: "Erro interno no servidor" });
+            console.error("Error when searching for patient:", error.message);
+            return res.status(500).json({ error: "Internal server error" });
         }
     }
 
@@ -50,19 +50,19 @@ class PatientesController {
             diagnosis: Yup.string().required("diagnosis is required").max(250),
             status: Yup.mixed()
                 .oneOf(["LEVE", "ALERTA", "GRAVE"]).required("Status is required"),
-                birth_date: Yup.string()
+            birth_date: Yup.string()
                 .required("birth_date is required")
                 .matches(/^\d{4}-\d{2}-\d{2}$/, "Format birth_date YYYY-MM-DD")
-                .test("is-valid-date", "Data inválida", (value) => {
-                  return !isNaN(Date.parse(value));
-                }),              
-            has_companion: Yup.boolean().required("has_companion is required(true or false)")
+                .test("is-valid-date", "Date invalid", (value) => {
+                    return !isNaN(Date.parse(value));
+                }),
+            has_companion: Yup.boolean().required("has_companion is required (true or false)")
         });
         try {
             // Verificando se há um cpf igual já cadastrado
             const existingCpf = await Patient.findOne({ where: { cpf: req.body.cpf } });
             if (existingCpf) {
-                return res.status(409).json({ error: "CPF já cadastrado." });
+                return res.status(409).json({ error: "CPF already registered." });
             }
             // Validando o schema - abortEarly (Irá continuar caso haja um erro e informará ao final)
             await schema.validate(req.body, { abortEarly: false });
@@ -82,16 +82,37 @@ class PatientesController {
                 });
             }
             // Qualquer outro erro interno
-            console.error("Erro ao criar paciente:", error.message);
-            return res.status(500).json({ error: "Erro interno no servidor" });
+            console.error("Error creating patient:", error.message);
+            return res.status(500).json({ error: "Internal server error" });
         }
     }
     // async update(req,res){
 
     // }
-    // async destroy(req,res){
+    async destroy(req, res) {
+        try {
+            const { id } = req.params; // Recebendo ID da URL
+            // Verificando se o ID passado é válido
+            if (isNaN(id)) {
+                return res.status(400).json({ error: "ID invalid" });
+            }
+            // Procurando o patient pelo id
+            const patient = await Patient.findByPk(id);
+            // Se ele não existir
+            if (!patient) {
+                return res.status(404).json({ error: "Patient not found" })
+            }
+            // Excluindo o patient encontrado
+            await patient.destroy();
+            // Respondendo sem corpo da requisição
+            return res.status(204).send();
 
-    // }
+        } catch (error) {
+            // Capturando um possível erro na busca
+            console.error("Error when searching for patient:", error.message);
+            return res.status(500).json({ error: "Internal server error" });
+        }
+    }
 }
 
 export default new PatientesController();

@@ -7,6 +7,6 @@ const routes = new Router();
 routes.get("/patients/:id" , patients.show );
 routes.post("/patients" , patients.create );
 // routes.put("/patients/:id" , patients.update );
-// routes.delete("/patients/:id" , patients.destroy );
+routes.delete("/patients/:id" , patients.destroy );
 
 export default routes;

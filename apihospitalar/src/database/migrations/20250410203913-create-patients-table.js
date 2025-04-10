@@ -24,6 +24,11 @@ module.exports = {
         unique: true,
         allowNull: false,
       },
+      // Campo "birth_date" dever do tipo data, orrigatório
+      birth_date: {
+        type: Sequelize.DATEONLY,
+        allowNull: false,
+      },
 
       // Campo "adress" - endereço do paciente, até 150 caracteres, obrigatório
       adress: {

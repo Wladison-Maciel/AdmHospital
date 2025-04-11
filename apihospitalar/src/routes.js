@@ -6,7 +6,7 @@ const routes = new Router();
 // routes.get("/patients" , patients.index );
 routes.get("/patients/:id" , patients.show );
 routes.post("/patients" , patients.create );
-// routes.put("/patients/:id" , patients.update );
+routes.patch("/patients/:id" , patients.update );
 routes.delete("/patients/:id" , patients.destroy );
 
 export default routes;

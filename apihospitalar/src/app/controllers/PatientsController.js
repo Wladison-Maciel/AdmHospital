@@ -18,7 +18,7 @@ class PatientesController {
             // Relizando busca do Patient
             const patient = await Patient.findOne({
                 where: { id }, // Buscar onde o ID seja igual no PostgreeSQL
-                // Removendo "has_companio" da exibição
+                // Removendo "has_companion" da exibição
                 attributes: ['id', 'name', 'cpf', 'adress', 'phone', 'diagnosis', 'status', 'birth_date']
             });
 
@@ -86,9 +86,34 @@ class PatientesController {
             return res.status(500).json({ error: "Internal server error" });
         }
     }
-    // async update(req,res){
-
-    // }
+    async update(req, res) {
+        try {
+            const { id } = req.params; // Recebendo ID via URL
+            // Verificando se o ID é válido
+            if (isNaN(id)) {
+                return res.status(400).json({ error: "ID invalid" })
+            }
+            // Procurando o patient pelo ID
+            const patient = await Patient.findByPk(id);
+            // Verificando se há patient com esse ID
+            if (!patient) {
+                return res.status(404).json({ error: "Patient not found" });
+            }
+            // Atualizando somente os dados solicitados
+            const fieldsToUpdate = req.body;
+            // Atualizando os campos solicitados
+            await patient.update(fieldsToUpdate);
+            // Retornando resposta em caso de sucesso
+            return res.status(200).json({
+                success: true,
+                message: "Patient successfully updated"
+            });
+        } catch (error) {
+            // Qualquer outro erro interno
+            console.error("Error creating patient:", error.message);
+            return res.status(500).json({ error: "Internal server error" });
+        }
+    }
     async destroy(req, res) {
         try {
             const { id } = req.params; // Recebendo ID da URL

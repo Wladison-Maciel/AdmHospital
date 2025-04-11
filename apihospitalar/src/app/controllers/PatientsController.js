@@ -88,32 +88,60 @@ class PatientesController {
     }
     async update(req, res) {
         try {
-            const { id } = req.params; // Recebendo ID via URL
+            const { id } = req.params; // Pegando o ID da URL
             // Verificando se o ID é válido
             if (isNaN(id)) {
-                return res.status(400).json({ error: "ID invalid" })
+                return res.status(400).json({ error: "ID invalid" });
             }
-            // Procurando o patient pelo ID
+            // Fazendo a busca pelo patient
             const patient = await Patient.findByPk(id);
-            // Verificando se há patient com esse ID
+            // Verificando se o há um patient com o ID procurado
             if (!patient) {
                 return res.status(404).json({ error: "Patient not found" });
             }
-            // Atualizando somente os dados solicitados
-            const fieldsToUpdate = req.body;
-            // Atualizando os campos solicitados
-            await patient.update(fieldsToUpdate);
+            // Verificando se no body há ao menos um campo para fazer a requisição
+            if (Object.keys(req.body).length === 0) {
+                return res.status(400).json({ error: "No data provided for update" });
+            }
+            // Criando um schema para a validação da atualização
+            const schema = Yup.object().shape({
+                name: Yup.string().max(100),
+                cpf: Yup.string().length(11),
+                adress: Yup.string().max(150),
+                phone: Yup.string().length(11),
+                diagnosis: Yup.string().max(250),
+                status: Yup.mixed().oneOf(["LEVE", "ALERTA", "GRAVE"]),
+                birth_date: Yup.date(),
+                has_companion: Yup.boolean(),
+            });
+            // Válidando o schema
+            await schema.validate(req.body, { abortEarly: false });
+
+            // Verifica se id está presente no body e remove
+            if ('id' in req.body) {
+                delete req.body.id;
+            }
+            // Atualizando o patient com os dados fornecidis
+            await patient.update(req.body);
             // Retornando resposta em caso de sucesso
             return res.status(200).json({
                 success: true,
-                message: "Patient successfully updated"
+                message: "Patient successfully updated",
+                data: patient,
             });
         } catch (error) {
-            // Qualquer outro erro interno
-            console.error("Error creating patient:", error.message);
+            if (error instanceof Yup.ValidationError) {
+                return res.status(400).json({
+                    error: "Validation error",
+                    messages: error.errors,
+                });
+            }
+
+            console.error("Error updating patient:", error.message);
             return res.status(500).json({ error: "Internal server error" });
         }
     }
+
     async destroy(req, res) {
         try {
             const { id } = req.params; // Recebendo ID da URL

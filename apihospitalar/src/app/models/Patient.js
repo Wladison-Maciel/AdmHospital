@@ -20,10 +20,10 @@ class Patient extends Model {
             }
         })
     }
-    //TODO
-    // static associate(models){
-    //     this.hasMany(models.Escort)
-    // }
+
+    static associate(models){
+        this.hasOne(models.Companion)
+    }
 }
 
 export default Patient;

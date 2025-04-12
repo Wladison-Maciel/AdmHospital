@@ -13,8 +13,8 @@ routes.delete("/patients/:id" , patients.destroy );
 // Rotas do Acompanhante
 routes.get("/patient/:patiendId/companion", companion.index);
 routes.get("/patient/:patiendId/companion/:id", companion.show);
-routes.create("/patient/:patiendId/companion", companion.create);
-routes.get("/patient/:patiendId/companion/:id", companion.update);
-routes.get("/patient/:patiendId/companion/:id", companion.destroy);
+routes.post("/patient/:patiendId/companion", companion.create);
+routes.patch("/patient/:patiendId/companion/:id", companion.update);
+routes.delete("/patient/:patiendId/companion/:id", companion.destroy);
 
 export default routes;

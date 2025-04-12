@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import Patient from "../models/Patient";
 import { Op } from "sequelize";
 import Companion from "../models/Companion";
-class PatientesController {
+class PatientsController {
     async index(req, res) {
         const {
             name,
@@ -124,7 +124,8 @@ class PatientesController {
                 include: [
                     {
                         model: Companion,
-                        attributes: ["id","name"]
+                        attributes: ["id","name"],
+                        required: false,
                     }
                 ],
                 where: { id }, // Buscar onde o ID seja igual no PostgreeSQL
@@ -278,4 +279,4 @@ class PatientesController {
     }
 }
 
-export default new PatientesController();
+export default new PatientsController();

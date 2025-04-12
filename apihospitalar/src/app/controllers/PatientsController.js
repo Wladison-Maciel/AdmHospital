@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import Patient from "../models/Patient";
 import { Op } from "sequelize";
+import Companion from "../models/Companion";
 class PatientesController {
     async index(req, res) {
         const {
@@ -120,6 +121,12 @@ class PatientesController {
 
             // Relizando busca do Patient
             const patient = await Patient.findOne({
+                include: [
+                    {
+                        model: Companion,
+                        attributes: ["id","name"]
+                    }
+                ],
                 where: { id }, // Buscar onde o ID seja igual no PostgreeSQL
                 // Removendo "has_companion" da exibição
                 attributes: ['id', 'name', 'cpf', 'adress', 'phone', 'diagnosis', 'status', 'birth_date']

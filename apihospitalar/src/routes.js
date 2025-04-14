@@ -11,10 +11,10 @@ routes.patch("/patients/:id" , patients.update );
 routes.delete("/patients/:id" , patients.destroy );
 
 // Rotas do Acompanhante
-routes.get("/patient/:patiendId/companion", companion.index);
-routes.get("/patient/:patiendId/companion/:id", companion.show);
-routes.post("/patient/:patiendId/companion", companion.create);
-routes.patch("/patient/:patiendId/companion/:id", companion.update);
-routes.delete("/patient/:patiendId/companion/:id", companion.destroy);
+routes.get("/patient/:patient_id/companion", companion.index);
+routes.get("/patient/:patient_id/companion/:id", companion.show);
+routes.post("/patient/:patient_id/companion", companion.create);
+routes.patch("/patient/:patient_id/companion/:id", companion.update);
+routes.delete("/patient/:patient_id/companion/:id", companion.destroy);
 
 export default routes;

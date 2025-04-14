@@ -10,14 +10,7 @@ class CompanionsController {
         try {
             // Recebendo id e patient_id da URL
             const { id, patient_id } = req.params;
-            // Verificando se id e patient_id são válidos
-            if (isNaN(id)) {
-                return res.status(400).json({ error: "ID companion invalid" });
-            }
-
-            if (isNaN(patient_id)) {
-                return res.status(404).json({ error: "ID patient invalid" })
-            }
+            
             // Relizando busca por companion
             const companion = await Companion.findOne({
                 // Incluindo o patient para melhor informação

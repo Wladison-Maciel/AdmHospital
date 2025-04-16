@@ -26,6 +26,11 @@ module.exports = {
         unique: true,
         allowNull: false,
       },
+      // Campo "kinship" - Qual membro familiar o Companion está associado ao Patient, Obrigatório
+      kinship: {
+        type: Sequelize.ENUM("PAI", "MÃE", "FILHO(A)", "IRMÃ(O)", "TIA(O)", "PRIMO(A)", "SOBRINHO(A)", "OUTRO"),
+        allowNull: false,
+      },
       // Campo "phone" - telefone do acompanhante, até 11 caracteres (sem formatação), obrigatório
       phone: {
         type: Sequelize.STRING(11),

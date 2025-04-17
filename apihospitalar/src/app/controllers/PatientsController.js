@@ -19,14 +19,14 @@ class PatientsController {
             updatedAfter,
             sort
         } = req.query;
-    
+
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 25;
         const offset = (page - 1) * limit;
-    
+
         let where = {};
         let order = [];
-    
+
         // Filtros de texto
         if (name) {
             where.name = { [Op.iLike]: `%${name}%` };
@@ -43,40 +43,40 @@ class PatientsController {
         if (diagnosis) {
             where.diagnosis = { [Op.iLike]: `%${diagnosis}%` };
         }
-    
+
         // Filtro de data de nascimento
         if (birth_date) {
             where.birth_date = birth_date; // formato YYYY-MM-DD já é válido
         }
-    
+
         // Filtro booleano
         if (has_companion !== undefined) {
             if (has_companion === "true" || has_companion === "false") {
                 where.has_companion = has_companion === "true";
             }
         }
-    
+
         // Status múltiplos
         if (status) {
             where.status = {
                 [Op.in]: status.split(",").map(s => s.toUpperCase()),
             };
         }
-    
+
         // Datas de criação
         if (createdBefore || createdAfter) {
             where.createdAt = {};
             if (createdAfter) where.createdAt[Op.gte] = parseISO(createdAfter);
             if (createdBefore) where.createdAt[Op.lte] = parseISO(createdBefore);
         }
-    
+
         // Datas de atualização
         if (updatedBefore || updatedAfter) {
             where.updatedAt = {};
             if (updatedAfter) where.updatedAt[Op.gte] = parseISO(updatedAfter);
             if (updatedBefore) where.updatedAt[Op.lte] = parseISO(updatedBefore);
         }
-    
+
         // Ordenação
         if (sort) {
             order = sort.split(",").map(item => {
@@ -84,15 +84,22 @@ class PatientsController {
                 return [field, direction?.toUpperCase() === "DESC" ? "DESC" : "ASC"];
             });
         }
-    
+
         try {
             const { rows, count } = await Patient.findAndCountAll({
+                include: [
+                    {
+                        model: Companion,
+                        attributes: ["id", "name"],
+                        required: false,
+                    }
+                ],
                 where,
                 order,
                 limit,
                 offset,
             });
-    
+
             return res.status(200).json({
                 success: true,
                 data: rows,
@@ -102,7 +109,7 @@ class PatientsController {
                     totalPages: Math.ceil(count / limit)
                 }
             });
-    
+
         } catch (error) {
             console.error("Erro ao buscar pacientes:", error.message);
             return res.status(500).json({ error: "Erro interno no servidor" });
@@ -124,7 +131,7 @@ class PatientsController {
                 include: [
                     {
                         model: Companion,
-                        attributes: ["id","name"],
+                        attributes: ["id", "name"],
                         required: false,
                     }
                 ],

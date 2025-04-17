@@ -1,5 +1,6 @@
 import Companion from "../models/Companion";
 import Patient from "../models/Patient";
+import * as Yup from "yup";
 
 class CompanionsController {
     async index(req, res) {
@@ -46,7 +47,42 @@ class CompanionsController {
         }
     }
     async create(req, res) {
+        // Construindo um Schema com base no Model do Database
+        const schema = Yup.object().shape({
+            name: Yup.string().required("name is required").max(100),
+            cpf: Yup.string().required("cpf is required").length(11),
+            phone: Yup.string().required("adress is required").length(11),
+            kinship: Yup.mixed()
+                .oneOf(["PAI", "MÃE", "FILHO(A)", "IRMÃ(O)", "TIA(O)", "PRIMO(A)", "SOBRINHO(A)", "OUTRO"]).required("Kinship is required"),
+            patient_id: Yup.number()
+        });
 
+        try {
+            const existingCpf = await Patient.findOne({ where: { cpf: req.body.cpf } });
+            if (existingCpf) {
+                return res.status(409).json({ error: "CPF already registered." });
+            }
+            // Validando o schema - abortEarly (Irá continuar caso haja um erro e informará ao final)
+            await schema.validate(req.body, { abortEarly: false });
+
+            const companion = await Companion.create(req.body);
+
+            res.status(201).json({
+                success: true,
+                data: companion,
+            })
+        } catch (error) {
+            // Caso a validação falhar
+            if (error instanceof Yup.ValidationError) {
+                return res.status(400).json({
+                    error: "Erro Validation",
+                    message: error.errors
+                });
+            }
+            // Qualquer outro erro interno
+            console.error("Error creating patient:", error.message);
+            return res.status(500).json({ error: "Internal server error" });
+        }
     }
     async update(req, res) {
 
@@ -55,8 +91,8 @@ class CompanionsController {
         try {
             const { id, patient_id } = req.params;
 
-            if(isNaN(id) || isNaN(patient_id)){
-                return res.status(400).json({ error: "Params Invalid"})
+            if (isNaN(id) || isNaN(patient_id)) {
+                return res.status(400).json({ error: "Params Invalid" })
             }
 
             const companion = await Companion.findOne({

@@ -4,13 +4,97 @@ import * as Yup from "yup";
 
 class CompanionsController {
     async index(req, res) {
+//         const {
+//             name,
+//             cpf,
+//             phone,
+//             createdBefore,
+//             createdAfter,
+//             updatedBefore,
+//             updatedAfter,
+//             sort
+//         } = req.query;
 
-    }
+//         const page = parseInt(req.query.page) || 1;
+//         const limit = parseInt(req.query.limit) || 25;
+//         const offset = (page - 1) * limit;
+
+//         let where = {};
+//         let order = [];
+
+//         // Filtros de texto
+//         if (name) {
+//             where.name = { [Op.iLike]: `%${name}%` };
+//         }
+//         if (cpf) {
+//             where.cpf = { [Op.iLike]: `%${cpf}%` };
+//         }
+//         if (phone) {
+//             where.phone = { [Op.iLike]: `%${phone}%` };
+
+
+//         // Datas de criação
+//         if (createdBefore || createdAfter) {
+//             where.createdAt = {};
+//             if (createdAfter) where.createdAt[Op.gte] = parseISO(createdAfter);
+//             if (createdBefore) where.createdAt[Op.lte] = parseISO(createdBefore);
+//         }
+
+//         // Datas de atualização
+//         if (updatedBefore || updatedAfter) {
+//             where.updatedAt = {};
+//             if (updatedAfter) where.updatedAt[Op.gte] = parseISO(updatedAfter);
+//             if (updatedBefore) where.updatedAt[Op.lte] = parseISO(updatedBefore);
+//         }
+
+//         // Ordenação
+//         if (sort) {
+//             order = sort.split(",").map(item => {
+//                 const [field, direction] = item.split(":");
+//                 return [field, direction?.toUpperCase() === "DESC" ? "DESC" : "ASC"];
+//             });
+//         }
+
+//         try {
+//             const { rows, count } = await Patient.findAndCountAll({
+//                 include: [
+//                     {
+//                         model: Patient,
+//                         attributes: ["id", "name"],
+//                         required: false,
+//                     }
+//                 ],
+//                 where,
+//                 order,
+//                 limit,
+//                 offset,
+//             });
+
+//             return res.status(200).json({
+//                 success: true,
+//                 data: rows,
+//                 meta: {
+//                     total: count,
+//                     page,
+//                     totalPages: Math.ceil(count / limit)
+//                 }
+//             });
+
+//         } catch (error) {
+//             console.error("Error when searching for companion:", error.message);
+//             return res.status(500).json({ error: "Intern server error" });
+//         }
+//     }
+}
     // Método para buscar um Acompanhante
     async show(req, res) {
         try {
             // Recebendo id e patient_id da URL
             const { id, patient_id } = req.params;
+
+            if(isNaN(id) || isNaN(patient_id)){
+                return res.status(400).json({ error: "Params Invalid" })
+            }
 
             // Relizando busca por companion
             const companion = await Companion.findOne({
@@ -93,7 +177,7 @@ class CompanionsController {
             const { id, patient_id } = req.params;
             // Verificando se as variáveis são válidas
             if (isNaN(id) || isNaN(patient_id)) {
-                return res.status(400).json({ error: "Params Invalid" })
+                return res.status(400).json({ error: "Params Invalid" });
             }
             // Procurando o companion solicitado
             const companion = await Companion.findOne({

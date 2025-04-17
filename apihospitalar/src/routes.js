@@ -13,7 +13,6 @@ routes.patch("/patients/:id" , patients.update );
 routes.delete("/patients/:id" , patients.destroy );
 
 // Rotas do Acompanhante
-routes.get("/patients/:patient_id/companion", companion.index);
 routes.get("/patients/:patient_id/companion/:id",validate(showCompanionParamsSchema, 'params'), companion.show);
 routes.post("/patients/:patient_id/companion", companion.create);
 routes.patch("/patients/:patient_id/companion/:id", companion.update);

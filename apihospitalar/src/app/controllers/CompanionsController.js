@@ -58,7 +58,7 @@ class CompanionsController {
         });
 
         try {
-            const existingCpf = await Patient.findOne({ where: { cpf: req.body.cpf } });
+            const existingCpf = await Companion.findOne({ where: { cpf: req.body.cpf } });
             if (existingCpf) {
                 return res.status(409).json({ error: "CPF already registered." });
             }
@@ -89,24 +89,26 @@ class CompanionsController {
     }
     async destroy(req, res) {
         try {
+            // Recebendo id e patient_id da URL
             const { id, patient_id } = req.params;
-
+            // Verificando se as variáveis são válidas
             if (isNaN(id) || isNaN(patient_id)) {
                 return res.status(400).json({ error: "Params Invalid" })
             }
-
+            // Procurando o companion solicitado
             const companion = await Companion.findOne({
                 where: {
                     id,
                     patient_id,
                 }
             });
-
+            // Retornando erro em caso de falha
             if (!companion) {
                 return res.status(404).json({ error: "Companion not found" })
             }
+            // Deletando customer em caso de sucesso
             await companion.destroy();
-
+            // Retornando 204 sem corpo
             return res.status(204).send();
         } catch (error) {
             // Capturando um possível erro na busca

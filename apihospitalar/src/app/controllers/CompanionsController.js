@@ -9,7 +9,7 @@ class CompanionsController {
             // Recebendo id e patient_id da URL
             const { id, patient_id } = req.params;
 
-            if(isNaN(id) || isNaN(patient_id)){
+            if (isNaN(id) || isNaN(patient_id)) {
                 return res.status(400).json({ error: "Params Invalid" })
             }
 
@@ -86,7 +86,62 @@ class CompanionsController {
         }
     }
     async update(req, res) {
+        try {
+            const { id, patient_id } = req.params;
 
+            if (isNaN(id) || isNaN(patient_id)) {
+                return res.status(404).json({ error: "Params Invalid" });
+            }
+
+            const companion = await Companion.findOne({
+                where: {
+                    id,
+                    patient_id,
+                }
+            });
+
+            if (!companion) {
+                return res.status(404).json({ error: "Companion not found" })
+            }
+
+            // Verificando se no body há ao menos um campo para fazer a requisição
+            if (Object.keys(req.body).length === 0) {
+                return res.status(400).json({ error: "No data provided for update" });
+            }
+
+            const schema = Yup.object().shape({
+                name: Yup.string().max(100),
+                cpf: Yup.string().length(11),
+                phone: Yup.string().length(11),
+                kinship: Yup.mixed().oneOf(["PAI", "MÃE", "FILHO(A)", "IRMÃ(O)", "TIA(O)", "PRIMO(A)", "SOBRINHO(A)", "OUTRO"])
+            });
+            // Válidando o schema
+            await schema.validate(req.body, { abortEarly: false });
+
+            if (('id' in req.body) || ('patient_id' in req.body)) {
+                delete req.body.id;
+                delete req.body.patient_id;
+            }
+
+            await companion.update(req.body);
+
+            return res.status(200).json({
+                success: true,
+                message: "Companion successfully updated",
+                data: companion,
+            });
+
+        } catch (error) {
+            if (error instanceof Yup.ValidationError) {
+                return res.status(400).json({
+                    error: "Validation error",
+                    messages: error.errors,
+                });
+            }
+
+            console.error("Error updating patient:", error.message);
+            return res.status(500).json({ error: "Internal server error" });
+        }
     }
     async destroy(req, res) {
         try {

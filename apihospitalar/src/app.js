@@ -2,7 +2,8 @@ import express from "express"; // Importa a Biblioteca Express
 import routes from "./routes"; // Importa o arquivo de rotas definido em "./routes"
 import "./database/index";
 import "dotenv/config";
-
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./config/swagger.js";
 
 // Define a classe App que será responsável por configurar o servidor
 class App{
@@ -14,6 +15,7 @@ class App{
     // Método para configurar os middlewares
     middlewares(){
         this.server.use(express.json()); // Permite que o servidor processe requisições com corpo em JSON
+        this.server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
     }
     // Método para configurar as rotas da aplicação
     routes(){

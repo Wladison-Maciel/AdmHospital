@@ -160,8 +160,8 @@ class UsersController {
 
         const { oldPassword } = req.body;
 
-        if(oldPassword && !(await user.checkPassword(oldPassword))){
-            return res.status(401).json({error: "User password not match"})
+        if (oldPassword && !(await user.checkPassword(oldPassword))) {
+            return res.status(401).json({ error: "User password not match" })
         }
 
         const { id, name, email, createdAt, updatedAt } = await user.update(req.body);
@@ -170,13 +170,13 @@ class UsersController {
     async destroy(req, res) {
         const user = await User.findByPk(req.params.id);
 
-        if(!user){
-            return res.status(404).json({error:"Registro não encontrado"})
+        if (!user) {
+            return res.status(404).json({ error: "Registro não encontrado" })
         }
 
         await user.destroy();
 
-        res.status(200).json({message:"Registro excluído com sucesso"})
+        res.status(200).json({ message: "Registro excluído com sucesso" })
     }
 }
 

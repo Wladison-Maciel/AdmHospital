@@ -2,8 +2,9 @@ import Sequelize from "sequelize";
 import config from '../config/database'; // Importa as configurações do banco de dados
 import Patient from '../app/models/Patient'
 import Companion from "../app/models/Companion";
+import User from "../app/models/User"
 // Lista de modelos a serem inicializados no banco de dados
-const models = [Patient, Companion];
+const models = [Patient, Companion, User];
 
 class Database {
     constructor() {

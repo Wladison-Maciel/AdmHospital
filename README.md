@@ -109,7 +109,7 @@ yarn install
 Crie um arquivo `.env` na raiz com:
 ```
 DB_HOST=localhost
-DB_USERNAME=postgres
+DB_USERNAME=[Seu usuário do PostgreSQL]
 DB_PASSWORD=[Sua senha do PostgreSQL]
 DB_DATABASE=[Nome do seu Database]
 DB_DIALECT=postgres

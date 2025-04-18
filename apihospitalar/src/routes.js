@@ -15,7 +15,6 @@ routes.post("/users", users.create);
 
 routes.use(authMiddleware);
 
-// Rotas dos Pacientes
 routes.get("/patients", patients.index);
 routes.get("/patients/:id", patients.show);
 routes.post("/patients", patients.create);

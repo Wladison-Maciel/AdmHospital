@@ -83,6 +83,9 @@ src/
 ### **Banco de Dados**
 - 📊 **PostgreSQL** — Sistema de banco de dados relacional.
 
+### **Deploy**
+- ☁️ **Render** — Plataforma utilizada para hospedar a API de forma gratuita e com deploy automático a partir do GitHub.
+
 ### **Ferramentas**
 - 🔧 **Insomnia** — Teste de rotas.
 - 💻 **VS Code** — Editor de código.
@@ -92,7 +95,7 @@ src/
 - 📦 **Yarn** - Utilizado para gerenciar as intalações.
 ---
 
-## 📑 Como Usar
+## 📑 Como Executar Localmente
 
 ### 1. Clone o repositório
 ```bash
@@ -141,6 +144,36 @@ Antes de acessar as rotas protegidas, siga este fluxo:
 ```bash
 Authorization: Bearer SEU_TOKEN_AQUI
 ```
+---
+
+## 🌐 Como Acessar Online (Deploy)
+
+### 🔗 1. Acesse a API hospedada
+
+Acesse o endpoint base da API (https://admhospital.onrender.com):
+
+### 📘 2. Documentação interativa
+
+Visualize e teste todas as rotas da API diretamente pelo navegador através do Swagger(https://admhospital.onrender.com/api-docs):
+
+### 🧪 3. Teste via ferramentas como Postman ou Insomnia
+
+Utilize qualquer cliente HTTP (como Postman ou Insomnia) para interagir com a API.
+
+### 🔐 4. Acesso a rotas protegidas
+
+Para acessar endpoints protegidos (como `/patients`, `/companions`), adicione o token no header:
+
+```bash
+Authorization: Bearer SEU_TOKEN_AQUI
+```
+
+### ⚠️ Observações Importantes
+
+- Nenhuma configuração local é necessária para usar a API online.
+- As alterações no banco de dados são persistidas, então cuidado ao testar com dados sensíveis.
+- A API pode levar alguns segundos para "acordar" no primeiro acesso, devido ao plano gratuito da Render.
+
 ---
 
 ## 👨‍💻 Autor

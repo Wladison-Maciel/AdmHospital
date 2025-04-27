@@ -39,7 +39,7 @@
 /**
  * @swagger
  * /users/{id}:
- *   put:
+ *   patch:
  *     summary: Atualiza os dados de um usuário
  *     tags: [Users]
  *     parameters:

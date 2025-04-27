@@ -30,7 +30,7 @@ routes.delete("/patients/:patient_id/companion/:id", companion.destroy);
 // Rotas dos Users
 routes.get("/users", users.index);
 routes.get("/users/:id", users.show);
-routes.put("/users/:id", users.update);
+routes.patch("/users/:id", users.update);
 routes.delete("/users/:id", users.destroy);
 
 export default routes;
